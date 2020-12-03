@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
 
 
-#TODO: Liran please fill up 
+function main()
+{
+    echo "=== UNINSTALLER ==="
+    sudo rm -r /opt/vault_run 
+    echo "::$APP_NAME:: uninstall has completed sucessfully"
+}
+
+# MAIN CALLER
+main "$@"

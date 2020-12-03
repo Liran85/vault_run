@@ -1,73 +1,32 @@
 #!/usr/bin/env bash
 
 
-# direct include (source)
-#source "/home/liran/bashcodes/vault_run/lib/installer"
-export RUNNER_PATH=$1
+APP_NAME="vault_run"
+APP_FULL_PATH="/opt/$APP_NAME/"
+# uninstall application
 
-function installApp()
-{
-    local app_location="/home/liran/bashcodes/"
-    cd $app_location
-    zip -r vault_run.zip vault_run
-    # Set permission
-    sudo chmod 765 "/opt/temp/"
-    #zip -b "/opt/temp/" vault_run.zip
-    # Copy Zip file to tmp libarary
-    sudo cp -p vault_run.zip /opt/temp/
-    if [[ -z $RUNNER_PATH ]]; then
-        RUNNER_PATH="$HOME/bashcodes"
-        echo "Directory option not set, installing into $RUNNER_PATH/vault_run"
-        sudo cp -p "/opt/temp/"vault_run.zip "$RUNNER_PATH/"
-        unzip -q vault_run.zip "$RUNNER_PATH/vault_run"
-        #unzip -q vault_run.zip
-    else
-        echo "Installing into $RUNNER_PATH"
-        sudo cp -p "/opt/temp/"vault_run.zip "$RUNNER_PATH/"
-        echo "unzipp the file"
-        #unzip -q opt/ vault_run.zip
-        cd $RUNNER_PATH
-        sudo unzip -q vault_run.zip
-    fi
+function install_app() {
+    echo "::$APP_NAME:: target intalition dir: $APP_FULL_PATH"
+    sudo mkdir -p $APP_FULL_PATH
+    sudo cp -R vault_run_install/* $APP_FULL_PATH
 }
 
-
-function createTreeLibrary() {
-# True if path not typed
-    if [[ -z $RUNNER_PATH ]]; then
-        RUNNER_PATH="$HOME/bashcodes/vault_run"
-        echo "Directory option not set, installing into $RUNNER_PATH/vault_run"
-        unzip -q vault_run.zip "$RUNNER_PATH/vault_run"
-
-    else
-        echo "Installing into $RUNNER_PATH/vault_run"
-        unzip unzip -q vault_run.zip "$RUNNER_PATH/vault_run"
+function check_path() {
+    echo $PATH | grep $APP_FULL_PATH 1>/dev/null
+    retVal=$?
+    if [ $retVal -ne 0 ]; then
+        echo "::$APP_NAME:: warning:applicatin $APP_NAME cannot be found in PATH"
+        echo "::$APP_NAME:: to add $APP_NAME into PATH add the following line into .bashrc:"
+        echo "export PATH=$APP_FULL_PATH:\$PATH"
     fi
-
-    mkdir -p $RUNNER_PATH/vault_run/{lib/{installer,file_handler},vault_runner}
-    
-
-# Extract a ZIP File to a Different Directory
-#unzip unzip -q vault_run.zip
-}
-
-function parseArguments() {
-    local get_opt=$2
-    case $get_opt in
-        --install) install_app
-        ;;
-        --uninstall) uninstall_app
-        ;;
-        *) echo exit 1
-        ;;
-    esac
     
 }
+
 function main() {
-    #select path
-    #echo "\nWhich location do you want to install application? \n"
-    #read pathLocation
-    installApp
+    echo "=== INSTALLER ==="
+    install_app
+    check_path
+    echo "::$APP_NAME:: installation completed sucessfully"
 }
 
 # MAIN CALLER

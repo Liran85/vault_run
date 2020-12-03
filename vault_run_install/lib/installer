@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+
+#RUNNER_PATH="/opt/vault_run/"
+RUNNER_PATH=$1
+#RUNNER_NAME=$2
+function install_app()
+{
+    #True if path not typed
+    if [[ -z $RUNNER_PATH ]]; then
+        RUNNER_PATH="$HOME/bashcodes/vault_run"
+        echo "Directory option not set, installing into $RUNNER_PATH/vault_run"
+    else
+        echo "Installing into ./$RUNNER_PATH/vault_run"
+    fi
+
+    mkdir -p $RUNNER_PATH/vault_run/{lib/{installer,file_handler},vault_runner}
+    #cp -p 
+    #mkdir "$RUNNER_PATH/$RUNNER_NAME" && touch $RUNNER_PATH/$RUNNER_NAME/"${RUNNER_NAME}_vault"
+    
+}
+
+function uninstall_app()
+{
+    #local answear 
+    echo "Are you sure you want to remove Application(Y/N)"
+    read answear
+    if [[ answear -eq 'Y' ]]; 
+    then 
+      rm -r $RUNNER_PATH/vault_run/
+      echo "Application has been successfully uninstalled."
+    else
+        echo "can't remove Application"
+        exit 1
+    fi
+    
+}
+
+function set_fs_premission()
+{
+    chmod 755 $RUNNER_PATH/{lib/{installer,file_handler},vault_runner}
+   
+}
