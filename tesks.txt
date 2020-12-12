@@ -1,0 +1,17 @@
+create vault:
+- create <filename>.vlt file extension 
+- file format will be ini
+- on each new vault add the following metadata:
+    - section [system]
+    - timestamp(unix timestamp)
+    - owner (file creator)
+- add_data wll write the user data under section[data](only for unseal)
+    - check if data section exists 
+    - add using key,value pairs
+    - determine insert format(print to the user example)
+    - encrypt the file 
+in the end of the created vault protect vault from deletion by set FS permission to all the file below admin
+
+_ optional read specific data from file(ini parser only from unseal)
+
+- add logger 

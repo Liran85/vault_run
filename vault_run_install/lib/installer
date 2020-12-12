@@ -1,43 +1,47 @@
 #!/usr/bin/env bash
 
 
-#RUNNER_PATH="/opt/vault_run/"
-RUNNER_PATH=$1
-#RUNNER_NAME=$2
-function install_app()
-{
-    #True if path not typed
-    if [[ -z $RUNNER_PATH ]]; then
-        RUNNER_PATH="$HOME/bashcodes/vault_run"
-        echo "Directory option not set, installing into $RUNNER_PATH/vault_run"
-    else
-        echo "Installing into ./$RUNNER_PATH/vault_run"
-    fi
-
-    mkdir -p $RUNNER_PATH/vault_run/{lib/{installer,file_handler},vault_runner}
-    #cp -p 
-    #mkdir "$RUNNER_PATH/$RUNNER_NAME" && touch $RUNNER_PATH/$RUNNER_NAME/"${RUNNER_NAME}_vault"
-    
+# Save vault to file
+function createVault() {
+  local output=""
+  output="#vault_runner:${VAULT_VERSION}"
+  if [ -f $VaultFile ]; then
+    echo "Vaultfile:: $VaultFile already exists"
+    exit 1
+  else
+    #echo "Generate Vaultfile $VaultFile"
+    touch $VaultFile
+    echo $output >>$VaultFile
+  fi
 }
 
-function uninstall_app()
-{
-    #local answear 
-    echo "Are you sure you want to remove Application(Y/N)"
-    read answear
-    if [[ answear -eq 'Y' ]]; 
-    then 
-      rm -r $RUNNER_PATH/vault_run/
-      echo "Application has been successfully uninstalled."
-    else
-        echo "can't remove Application"
-        exit 1
-    fi
-    
+function genKey() {
+  # True if FILE exist
+  local key=${1-}
+  if [ -f $keyFile ]; then
+    echo "Keyfile:: $VAULT_KEYS already exists"
+    exit 1
+  else
+    #echo "Generate keyfile: $VAULT_KEYS"
+    arr["key"]=openssl rand -hex 8
+    echo arr["key"] >$keyFile
+  fi
 }
 
-function set_fs_premission()
-{
-    chmod 755 $RUNNER_PATH/{lib/{installer,file_handler},vault_runner}
-   
+function encrypt() {
+  #gpg -c $keyFile
+  openssl aes-256-cbc -a -salt -in $keyFile -out $keyFile.enc
+  retVal=$?
+  if [ $retVal -eq 0 ]; then
+    rm $keyFile
+    echo "encrypted file sucessfully"
+  fi
+
+}
+
+function decrypt() {
+  local file=$1
+  openssl aes-256-cbc -d -a -in .$file -out $file >2&>1
+  rm $file
+
 }
