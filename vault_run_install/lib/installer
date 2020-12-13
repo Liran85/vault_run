@@ -20,7 +20,7 @@ for key in "${keys[@]}"
 do
    echo $key >>$filename
 done
-sed -i "/^timestamp=/s/=.*/=$(date +"%T")/" $filename
+sed -i "/^timestamp=/s/=.*/=$(date +%s)/" $filename
 sed -i "/^owner=/s/=.*/=$owner/" $filename
 }
 
