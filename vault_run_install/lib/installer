@@ -3,17 +3,27 @@
 
 # Save vault to file
 function createVault() {
-  local output=""
-  output="#vault_runner:${VAULT_VERSION}"
-  if [ -f $VaultFile ]; then
-    echo "Vaultfile:: $VaultFile already exists"
-    exit 1
-  else
-    #echo "Generate Vaultfile $VaultFile"
-    touch $VaultFile
-    echo $output >>$VaultFile
-  fi
+local Vault_path=${1-}
+if [ -z $Vault_path ]; then
+    Vault_path=$PWD
+    echo "vault was created on $PWD"
+fi
+owner=$(whoami)
+filename="${Vault_path}/$owner.vlt"
+# echo "[Settings]" >>filename
+# echo "timestamp=$(date +"%T")" >>filename
+# echo "owner=$owner" >>filename
+# create array of strings 
+declare -a keys=("[Settings]" "timestamp=" "owner=")
+# iterating over array(folders)
+for key in "${keys[@]}"
+do
+   echo $key >>$filename
+done
+sed -i "/^timestamp=/s/=.*/=$(date +"%T")/" $filename
+sed -i "/^owner=/s/=.*/=$owner/" $filename
 }
+
 
 function genKey() {
   # True if FILE exist
