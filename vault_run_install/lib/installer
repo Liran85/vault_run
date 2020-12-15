@@ -1,20 +1,24 @@
 #!/usr/bin/env bash
 
 
+source "$TARGET_USER/git/vault_run/vault_run_install/lib/file_handler"
 # Save vault to file
 function createVault() {
 local Vault_path=${1-}
-if [ -z $Vault_path ]; then
-    Vault_path=$PWD
-    echo "vault was created on $PWD"
-fi
 owner=$(whoami)
 filename="${Vault_path}/$owner.vlt"
-# echo "[Settings]" >>filename
-# echo "timestamp=$(date +"%T")" >>filename
-# echo "owner=$owner" >>filename
+if [ -z $Vault_path ]; then
+    Vault_path=$PWD
+    filename="${Vault_path}/$owner.vlt"  
+fi
+if [[ -f "$filename" ]]; then
+    echo "You cant create $filename is alredy exist you need to run with diffrent user "
+    exit 1
+
+echo "vault will be created onto $Vault_path"
+fi
 # create array of strings 
-declare -a keys=("[Settings]" "timestamp=" "owner=")
+declare -a keys=("[Settings]" "timestamp=" "owner=" ' ' "[Data]")
 # iterating over array(folders)
 for key in "${keys[@]}"
 do
@@ -38,20 +42,4 @@ function genKey() {
   fi
 }
 
-function encrypt() {
-  #gpg -c $keyFile
-  openssl aes-256-cbc -a -salt -in $keyFile -out $keyFile.enc
-  retVal=$?
-  if [ $retVal -eq 0 ]; then
-    rm $keyFile
-    echo "encrypted file sucessfully"
-  fi
 
-}
-
-function decrypt() {
-  local file=$1
-  openssl aes-256-cbc -d -a -in .$file -out $file >2&>1
-  rm $file
-
-}

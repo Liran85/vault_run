@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-#source "$TARGET_USER/git/vault_run/vault_run_install/lib/installer"
+source "$TARGET_USER/git/vault_run/vault_run_install/lib/installer"
 function log()
 {
     local msg=$1
@@ -13,7 +13,7 @@ function log()
 
 
 function encrypt() {
-  openssl aes-256-cbc -a -salt -in $filename -out $filename.enc 2> /dev/null
+  openssl aes-256-cbc -a -salt -in $filename -out $filename.enc >2&>1 /dev/null
   retVal=$?
   if [ $retVal -eq 0 ]; then
     rm $filename
@@ -23,8 +23,9 @@ function encrypt() {
 }
 
 function decrypt() {
-  openssl aes-256-cbc -d -a -in liran.vlt.enc -out liran.vlt 2> /dev/null
-  rm liran.vlt
+  local file=$1
+  openssl aes-256-cbc -d -a -in .$filename -out $filename >2&>1 /dev/null
+  rm $file
 
 }
 
@@ -37,6 +38,5 @@ function sealVault()
 
 function unsealVault()
 {
-    log "in unseal function"
-    decrypt
+    log "in seal function"
 }

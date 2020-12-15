@@ -5,7 +5,7 @@ create vault:
     - section [system]
     - timestamp(unix timestamp)
     - owner (file creator)
-- add_data wll write the user data under section[data](only for unseal)
+- add_data will write the user data under section[data](only for unseal)
     - check if data section exists 
     - add using key,value pairs
     - determine insert format(print to the user example)
