@@ -1,19 +1,14 @@
 #!/usr/bin/env bash
 
-
-#source "$TARGET_USER/git/vault_run/vault_run_install/lib/installer"
-function log()
-{
-    local msg=$1
-    local timestamp=$(date +"%T")
-    local funcName=${FUNCNAME[*]}
-    echo "[VAULT]:[$timestamp]:[$funcName]:$msg"
+function log() {
+  local msg=$1
+  local timestamp=$(date +"%T")
+  local funcName=${FUNCNAME[*]}
+  echo "[VAULT]:[$timestamp]:[$funcName]:$msg"
 }
 
-
-
 function encrypt() {
-  openssl aes-256-cbc -a -salt -in $filename -out $filename.enc 2> /dev/null
+  openssl aes-256-cbc -a -salt -in $filename -out $filename.enc 2>/dev/null
   retVal=$?
   if [ $retVal -eq 0 ]; then
     rm $filename
@@ -23,20 +18,43 @@ function encrypt() {
 }
 
 function decrypt() {
-  openssl aes-256-cbc -d -a -in liran.vlt.enc -out liran.vlt 2> /dev/null
-  rm liran.vlt
+  openssl aes-256-cbc -d -a -in "${filename}.enc" -out $filename 2>/dev/null
+  rm $filename.enc
 
 }
 
-function sealVault()
-{
-    log "in seal function"
-    encrypt
+function sealVault() {
+  log "in seal function"
+  encrypt
 
 }
 
-function unsealVault()
-{
-    log "in unseal function"
-    decrypt
+function unsealVault() {
+  log "in unseal function"
+  decrypt
+}
+
+function addData() {
+  local incomeValue=${1-}
+  unsealVault
+  # check if Data section is exist
+  grep -Fxq "[Data]" $filename 
+  retVal=$?
+  if [ $retVal -eq 0 ]; then
+    keys=("${keys[@]}" "income=" )
+    echo ${keys[5]} >>$filename
+    sed -i "/^income=/s/=.*/=$incomeValue/" $filename
+    else
+    echo "Data section not exist"
+    exit 1
+  fi
+  sealVault
+ 
+}
+
+ # create backup file /tmp libary in unseal mode
+function backupVault() {
+  echo $filename
+  local backup_dir="/tmp"
+  cp $filename $backup_dir/$filename.$(date +"%Y%m%d")
 }

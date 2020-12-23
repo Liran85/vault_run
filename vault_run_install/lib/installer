@@ -4,22 +4,13 @@
 source "$TARGET_USER/git/vault_run/vault_run_install/lib/file_handler"
 # Save vault to file
 function createVault() {
-local Vault_path=${1-}
-owner=$(whoami)
-filename="${Vault_path}/$owner.vlt"
-if [ -z $Vault_path ]; then
-    Vault_path=$PWD
-    filename="${Vault_path}/$owner.vlt"  
-fi
+  # check if vault path exist
 if [[ -f "$filename" ]]; then
     echo "You cant create $filename is alredy exist you need to run with diffrent user "
     exit 1
 
-echo "vault will be created onto $Vault_path"
+echo "vault will be created onto $VAULT_PATH"
 fi
-# create array of strings 
-declare -a keys=("[Settings]" "timestamp=" "owner=" ' ' "[Data]")
-# iterating over array(folders)
 for key in "${keys[@]}"
 do
    echo $key >>$filename
@@ -29,17 +20,13 @@ sed -i "/^owner=/s/=.*/=$owner/" $filename
 }
 
 
-function genKey() {
-  # True if FILE exist
-  local key=${1-}
-  if [ -f $keyFile ]; then
-    echo "Keyfile:: $VAULT_KEYS already exists"
-    exit 1
-  else
-    #echo "Generate keyfile: $VAULT_KEYS"
-    arr["key"]=openssl rand -hex 8
-    echo arr["key"] >$keyFile
-  fi
-}
-
-
+# function genKey() {
+#   # True if FILE exist
+#   local key=${1-}
+#   if [ -f $keyFile ]; then
+#     echo "Keyfile:: $VAULT_K
+#     #echo "Generate keyfile: $VAULT_KEYS"
+#     arr["key"]=openssl rand -hex 8
+#     echo arr["key"] >$keyFile
+#   fi
+# }
