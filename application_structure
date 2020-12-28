@@ -1,0 +1,14 @@
+installer is a clone from github to whenever you want
+install.sh create the application structures, set permissions.
+
+domain=vault_runner
+from echo $PATH
+exec = /usr/local/bin/${domain}
+
+static PATHS:
+lib = /usr/lib/${domain}
+log = /var/log/${domain}/installer
+log = /var/log/${domain}/app
+user_data = $HOME/.${domain}/backups
+
+General availability = $PWD/vault_runner 

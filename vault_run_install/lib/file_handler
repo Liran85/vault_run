@@ -48,7 +48,7 @@ function addData() {
     echo "Data section not exist"
     exit 1
   fi
-  sealVault
+  #sealVault
  
 }
 
