@@ -1,24 +1,28 @@
 #!/usr/bin/env bash
 
+set -e
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This install must be run as root" 
+   exit 1
+fi
+
+source "vars"
+
+function removeServiceUser()
+{
+    deluser "${SUDO_USER}" "${SERVICE_USER}" 
+    deluser "${SERVICE_USER}"
+}
 
 function main()
 {
-    echo "=== UNINSTALLER ==="
-    sudo rm -r /opt/vault_run 
-    echo "::$APP_NAME:: sucessfully removed from /opt/vault_run"
-    sudo rm -r /usr/lib/vault_runner
-    echo "::$APP_NAME:: sucessfully removed from /usr/lib/vault_runner"
-    sudo rm -r /var/log/vault_runner/installerlog
-    echo "::$APP_NAME:: sucessfully removed from /var/log/vault_runner/installerlog"
-    sudo rm -r /var/log/vault_runner/applog
-    echo "::$APP_NAME:: sucessfully removed from /var/log/vault_runner/applog"
-    sudo rm -r userdata=$HOME/.vault_runner/backups
-    echo "::$APP_NAME:: sucessfully removed from /var/log/vault_runner/applog"
-    
+    sudo rm -rfv "${LIB_DIR}" 
+    sudo rm -fv "$EXEC_FILE"
+    removeServiceUser
+
 }
-/var/log/${domain}/installer
-log = /var/log/${domain}/app
-user_data = $HOME/.${domain}/backup
+
 
 # MAIN CALLER
 main "$@"

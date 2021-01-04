@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 
 
-source "$TARGET_USER/git/vault_run/vault_run_install/lib/file_handler"
-# Save vault to file
+source "vars"
+
 function createVault() {
   # check if vault path exist
-if [[ -f "$filename" ]]; then
-    echo "You cant create $filename is alredy exist you need to run with diffrent user "
+if [[ -f "$FILE_NAME" ]]; then
+    echo "You cant create $FILE_NAME is alredy exist you need to run with diffrent user "
     exit 1
 
-echo "vault will be created onto $VAULT_PATH"
+echo "vault will be created onto $USER_DATA"
 fi
 for key in "${keys[@]}"
 do
-   echo $key >>$filename
+   echo $key >>$FILE_NAME
 done
-sed -i "/^timestamp=/s/=.*/=$(date +%s)/" $filename
-sed -i "/^owner=/s/=.*/=$owner/" $filename
+sed -i "/^timestamp=/s/=.*/=$(date +%s)/" $FILE_NAME
+sed -i "/^OWNER=/s/=.*/=$OWNER/" $FILE_NAME
 }
 
 

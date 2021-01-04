@@ -7,11 +7,12 @@ declare -a keys=("[Settings]" "timestamp=" "owner=" ' ' "[Data]")
 declare VaultFile="/home/liran/git/vault_run/vault_users/$VAULT_NAME.txt"
 declare keyFile="/home/liran/git/vault_run/vault_users/$VAULT_KEYS.txt"
 TARGET_USER=~liran
-export LIB_D_PATH="/home/liran/git/vault_run/vault_run_install/lib"
+export LIB_D_PATH="/opt/vault_run/lib"
 for source_file in "$LIB_D_PATH"/*; do source "${source_file}"; done
-#source "$TARGET_USER/git/vault_run/vault_run_install/lib"
+source "$LIB_DIR/vars"
 owner=$(whoami)
 declare filename="$VAULT_PATH/$owner.vlt"  
+
 
 function showHelp() {
   echo "this script is a simple bash script for creating an encrypted key-value database with a keyfile"
@@ -27,7 +28,7 @@ function main() {
   case "${1-help}" in
     init)
     createVault
-    sealVault
+    #sealVault
     ;;
     addNewData)
     addData ${2-}

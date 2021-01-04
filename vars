@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+export DOMAIN="vault_runner"
+export SERVICE_USER="vault"
+export LIB_DIR=/usr/lib/"${DOMAIN}"
+export LOG_DIR=/var/log/"${DOMAIN}"
+export USER_DATA=$HOME/."${DOMAIN}"
+export BACKUP_DIR=$USER_DATA/backups
+export EXEC_FILE=/usr/local/bin/"${DOMAIN}"
+export FILE_NAME="$USER_DATA/$owner.vlt"  
+export OWNER=$(whoami)
